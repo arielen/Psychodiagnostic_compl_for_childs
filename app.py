@@ -52,7 +52,7 @@ class Ui_MainWindow(object):
         self.cbox_tests.setGeometry(QtCore.QRect(10, 100, 651, 25))
         self.cbox_tests.setObjectName("cbox_tests")
         for test in self.Test.get_tests():
-            self.cbox_tests.addItem(test)
+            self.cbox_tests.addItem(test, [f"{test}", f"{test}"])
 
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(10, 10, 891, 20))
@@ -64,7 +64,15 @@ class Ui_MainWindow(object):
 
         self.retranslateUiQuestion(MainWindow)
 
+        # update instructions
+        self.cbox_tests.currentIndexChanged.connect(self.updateTestCombo)
+        self.updateTestCombo(self.cbox_tests.currentIndex())
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def updateTestCombo(self, index):
+        """ Обновление инструкции в зависимости от выбранного теста
+        """
+        self.lbl_instruction.setText(self.Test.get_instruction(index))
 
     def setupUiQuestion(self) -> None:
         """Создание элементов тестовой части 
@@ -82,13 +90,17 @@ class Ui_MainWindow(object):
         self.progressBar.setGeometry(QtCore.QRect(60, 280, 118, 23))
         self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
+
         self.lbl_instruction = QtWidgets.QLabel(self.widget)
         self.lbl_instruction.setGeometry(QtCore.QRect(10, 10, 771, 81))
+        self.lbl_instruction.setWordWrap(True)
         self.lbl_instruction.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.lbl_instruction.setObjectName("lbl_instruction")
+
         self.lbl_question = QtWidgets.QLabel(self.widget)
         self.lbl_question.setGeometry(QtCore.QRect(10, 99, 771, 131))
         self.lbl_question.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.lbl_question.setWordWrap(True)
         self.lbl_question.setObjectName("lbl_question")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -99,10 +111,13 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
-    def retranslateUiInstruction(self, MainWindow):
+    def retranslateUiInstruction(self, MainWindow, test: int = 0):
+        """Тут мы меняем инструкцию к тесту!
+        """
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.lbl_instruction.setText(_translate(
-            "MainWindow", self.Test.get_instruction()))
-        pass
+            "MainWindow", self.Test.get_instruction(test)))
 
     def retranslateUiQuestion(self, MainWindow):
         """Отрисовка интерфейся посвещенной тесту: 
@@ -112,8 +127,9 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.btn_yes.setText(_translate("MainWindow", "Да"))
         self.btn_no.setText(_translate("MainWindow", "Нет"))
-        self.lbl_instruction.setText(_translate(
-            "MainWindow", self.Test.get_instruction()))
+
+        self.retranslateUiInstruction(MainWindow)
+
         self.lbl_question.setText(_translate("MainWindow", "Вопрос"))
 
     def retranslateUi(self, MainWindow):
@@ -126,6 +142,8 @@ class Ui_MainWindow(object):
             _translate("MainWindow", "Фамилия"))
         self.edt_age.setPlaceholderText(_translate("MainWindow", "Возраст"))
         self.btn_begin.setText(_translate("MainWindow", "Начать тестирование"))
+        self.label.setText(_translate("MainWindow", "Психодиагностический комплекс для детей (или автоматизированное тестирование личности детей), оказавшихся в трудной жизненной ситуации)\n"
+                                      ""))
 
         self.add_functions()
 
@@ -146,6 +164,7 @@ class Ui_MainWindow(object):
             if check_data():
                 print('letsgo')
             else:
+                print(self.cbox_tests.currentIndex())
                 self.showErrorOk("Не все данные введены !")
 
     def showErrorOk(self, text: str = ""):
