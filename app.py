@@ -34,6 +34,13 @@ class Ui_MainWindow(object):
         self.edt_age.setText("")
         self.edt_age.setMaxLength(2)
         self.edt_age.setObjectName("edt_age")
+        self.btn_begin = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_begin.setGeometry(QtCore.QRect(660, 100, 141, 25))
+        self.btn_begin.setObjectName("btn_begin")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(10, 10, 891, 20))
+        self.label.setTextFormat(QtCore.Qt.TextFormat.RichText)
+        self.label.setObjectName("label")
 
         # combobox choices genders
         self.cbox_gender = QtWidgets.QComboBox(self.centralwidget)
@@ -43,10 +50,6 @@ class Ui_MainWindow(object):
         for gender in self.Test.get_genders():
             self.cbox_gender.addItem(gender)
 
-        self.btn_begin = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_begin.setGeometry(QtCore.QRect(660, 100, 141, 25))
-        self.btn_begin.setObjectName("btn_begin")
-
         # combobox choices tests
         self.cbox_tests = QtWidgets.QComboBox(self.centralwidget)
         self.cbox_tests.setGeometry(QtCore.QRect(10, 100, 651, 25))
@@ -54,14 +57,11 @@ class Ui_MainWindow(object):
         for test in self.Test.get_tests():
             self.cbox_tests.addItem(test, [f"{test}", f"{test}"])
 
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(10, 10, 891, 20))
-        self.label.setTextFormat(QtCore.Qt.TextFormat.RichText)
-        self.label.setObjectName("label")
         # отрисовываем статичный интерфейс
         self.setupUiQuestion()
         self.retranslateUi(MainWindow)
 
+        # отрисовываем динамический интерфейс тестов
         self.retranslateUiQuestion(MainWindow)
 
         # update instructions
@@ -90,13 +90,11 @@ class Ui_MainWindow(object):
         self.progressBar.setGeometry(QtCore.QRect(60, 280, 118, 23))
         self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
-
         self.lbl_instruction = QtWidgets.QLabel(self.widget)
         self.lbl_instruction.setGeometry(QtCore.QRect(10, 10, 771, 81))
         self.lbl_instruction.setWordWrap(True)
         self.lbl_instruction.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.lbl_instruction.setObjectName("lbl_instruction")
-
         self.lbl_question = QtWidgets.QLabel(self.widget)
         self.lbl_question.setGeometry(QtCore.QRect(10, 99, 771, 131))
         self.lbl_question.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -127,10 +125,9 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.btn_yes.setText(_translate("MainWindow", "Да"))
         self.btn_no.setText(_translate("MainWindow", "Нет"))
+        self.lbl_question.setText(_translate("MainWindow", "Вопрос"))
 
         self.retranslateUiInstruction(MainWindow)
-
-        self.lbl_question.setText(_translate("MainWindow", "Вопрос"))
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
