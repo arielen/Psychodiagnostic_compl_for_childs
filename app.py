@@ -7,7 +7,7 @@ class Ui_MainWindow(object):
     def __init__(self) -> None:
         self.Test = Test()
 
-    def setupUi(self, MainWindow):
+    def setupUi(self, MainWindow) -> None:
         """Создание общих элементов приложения 
         """
         MainWindow.setObjectName("MainWindow")
@@ -69,10 +69,28 @@ class Ui_MainWindow(object):
         self.updateTestCombo(self.cbox_tests.currentIndex())
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def updateTestCombo(self, index):
+    def updateTestCombo(self, index) -> None:
         """ Обновление инструкции в зависимости от выбранного теста
         """
         self.lbl_instruction.setText(self.Test.get_instruction(index))
+
+    def updateTestLeonhardSchmishek(self) -> None:
+        pass
+
+    def updateTestScalePersonalAnxiety(self) -> None:
+        pass
+
+    def updateTestColorEtkind(self) -> None:
+        pass
+
+    def updateTestColorEtkindKids(self) -> None:
+        pass
+
+    def updateTestCattell(self) -> None:
+        pass
+
+    def updateTestSocialSupportScale(self) -> None:
+        pass
 
     def setupUiQuestion(self) -> None:
         """Создание элементов тестовой части 
@@ -109,7 +127,7 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
-    def retranslateUiInstruction(self, MainWindow, test: int = 0):
+    def retranslateUiInstruction(self, MainWindow, test: int = 0) -> None:
         """Тут мы меняем инструкцию к тесту!
         """
         _translate = QtCore.QCoreApplication.translate
@@ -117,7 +135,7 @@ class Ui_MainWindow(object):
         self.lbl_instruction.setText(_translate(
             "MainWindow", self.Test.get_instruction(test)))
 
-    def retranslateUiQuestion(self, MainWindow):
+    def retranslateUiQuestion(self, MainWindow) -> None:
         """Отрисовка интерфейся посвещенной тесту: 
         Опросник К.Леонгарда – Г. Шмишека для исследования акцентуированных свойств личности
         """
@@ -129,7 +147,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUiInstruction(MainWindow)
 
-    def retranslateUi(self, MainWindow):
+    def retranslateUi(self, MainWindow) -> None:
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.edt_name.setPlaceholderText(_translate("MainWindow", "Имя"))
@@ -164,7 +182,7 @@ class Ui_MainWindow(object):
                 print(self.cbox_tests.currentIndex())
                 self.showErrorOk("Не все данные введены !")
 
-    def showErrorOk(self, text: str = ""):
+    def showErrorOk(self, text: str = "") -> None:
         """Простой вывод ошибок с кнопкой "Ok" 
         """
         reply = QtWidgets.QMessageBox()
