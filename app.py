@@ -84,9 +84,11 @@ class Ui_MainWindow(object):
                 5: {"setup": self.setupTestSocialSupportScale,
                     "retranslate": self.retranslateUiTestSocialSupportScale}}
         self.lbl_instruction.setText(self.Test.get_instruction(index))
+        [obj.close() for obj in self.garbage]
         if index in data:
             data[index]["setup"]()
             data[index]["retranslate"](self.MainWindow, _translate)
+        [obj.show() for obj in self.garbage]
 
     def change_edit_user_data(self, params: bool) -> None:
         """Изменение активности пользовательских данных
@@ -97,16 +99,9 @@ class Ui_MainWindow(object):
         for edit in edits:
             edit.setEnabled(params)
 
-    def setupTestClose(self) -> None:
-        [obj.close() for obj in self.garbage]
-
-    def setupTestShow(self) -> None:
-        [obj.show() for obj in self.garbage]
-
     def setupTestLeonhardSchmishek(self) -> None:
         """Создание объектов взаимодействия для теста Leonhard Schmishek
         """
-        self.setupTestClose()
         self.btn_yes = QtWidgets.QPushButton(self.widget)
         self.btn_yes.setGeometry(QtCore.QRect(320, 280, 80, 25))
         self.btn_yes.setObjectName("btn_yes")
@@ -125,7 +120,6 @@ class Ui_MainWindow(object):
 
         self.garbage = [self.btn_yes, self.btn_no,
                         self.progressBar, self.lbl_question]
-        self.setupTestShow()
 
     def retranslateUiLeonhardSchmishek(self, MainWindow, _translate) -> None:
         """Отрисовка интерфейся посвещенной тесту: 
@@ -140,7 +134,6 @@ class Ui_MainWindow(object):
         """Создание объектов взаимодействия для теста
         2. Шкала личностной тревожности для учащихся 10-16 лет
         """
-        self.setupTestClose()
         self.btn_no = QtWidgets.QPushButton(self.widget)
         self.btn_no.setGeometry(QtCore.QRect(150, 280, 80, 25))
         self.btn_no.setObjectName("btn_no")
@@ -159,7 +152,6 @@ class Ui_MainWindow(object):
 
         self.garbage = [self.btn_no, self.btn_little, self.btn_enought,
                         self.btn_much, self.btn_highly]
-        self.setupTestShow()
 
     def retranslateUiScalePersonalAnxiety(self, MainWindow, _translate) -> None:
         """Отрисовка интерфейся посвещенной тесту: 
@@ -173,33 +165,75 @@ class Ui_MainWindow(object):
         self.btn_highly.setText(_translate("MainWindow", "Очень"))
 
     def setupTestColorEtkind(self) -> None:
-        self.setupTestClose()
-        self.garbage = []
-        self.setupTestShow()
+        self.btn_blue = QtWidgets.QPushButton(self.widget)
+        self.btn_blue.setGeometry(QtCore.QRect(20, 280, 80, 25))
+        self.btn_blue.setObjectName("btn_blue")
+        self.btn_green = QtWidgets.QPushButton(self.widget)
+        self.btn_green.setGeometry(QtCore.QRect(110, 280, 80, 25))
+        self.btn_green.setObjectName("btn_green")
+        self.btn_red = QtWidgets.QPushButton(self.widget)
+        self.btn_red.setGeometry(QtCore.QRect(200, 280, 80, 25))
+        self.btn_red.setObjectName("btn_red")
+        self.btn_yellow = QtWidgets.QPushButton(self.widget)
+        self.btn_yellow.setGeometry(QtCore.QRect(290, 280, 80, 25))
+        self.btn_yellow.setObjectName("btn_yellow")
+        self.btn_violete = QtWidgets.QPushButton(self.widget)
+        self.btn_violete.setGeometry(QtCore.QRect(380, 280, 80, 25))
+        self.btn_violete.setObjectName("btn_violete")
+        self.btn_brown = QtWidgets.QPushButton(self.widget)
+        self.btn_brown.setGeometry(QtCore.QRect(470, 280, 80, 25))
+        self.btn_brown.setObjectName("btn_brown")
+        self.btn_black = QtWidgets.QPushButton(self.widget)
+        self.btn_black.setGeometry(QtCore.QRect(560, 280, 80, 25))
+        self.btn_black.setObjectName("btn_black")
+        self.btn_grey = QtWidgets.QPushButton(self.widget)
+        self.btn_grey.setGeometry(QtCore.QRect(650, 280, 80, 25))
+        self.btn_grey.setObjectName("btn_grey")
+
+        self.garbage = [self.btn_blue, self.btn_green, self.btn_red,
+                        self.btn_yellow, self.btn_violete, self.btn_brown,
+                        self.btn_black, self.btn_grey]
 
     def retranslateUiColorEtkind(self, MainWindow, _translate) -> None:
-        pass
-
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        colors = {
+            "Синий": QtGui.QColor("#1A35E1"), "Зеленый": QtGui.QColor("#1AE142"),
+            "Красный": QtGui.QColor("#E11A1A"), "Желтый": QtGui.QColor("#B2E11A"),
+            "Фиолетовый": QtGui.QColor("#701AE1"), "Коричневый": QtGui.QColor("#7D530B"),
+            "Черный": QtGui.QColor("#000000"), "Серый": QtGui.QColor("#5E5E5E")
+        }
+        self.btn_blue.setText(_translate("MainWindow", "Синий"))
+        self.btn_blue.setPalette(QtGui.QPalette(colors[self.btn_blue.text()]))
+        self.btn_green.setText(_translate("MainWindow", "Зеленый"))
+        self.btn_green.setPalette(
+            QtGui.QPalette(colors[self.btn_green.text()]))
+        self.btn_red.setText(_translate("MainWindow", "Красный"))
+        self.btn_red.setPalette(QtGui.QPalette(colors[self.btn_red.text()]))
+        self.btn_yellow.setText(_translate("MainWindow", "Желтый"))
+        self.btn_yellow.setPalette(QtGui.QPalette(colors[self.btn_yellow.text()]))
+        self.btn_violete.setText(_translate("MainWindow", "Фиолетовый"))
+        self.btn_violete.setPalette(QtGui.QPalette(colors[self.btn_violete.text()]))
+        self.btn_brown.setText(_translate("MainWindow", "Коричневый"))
+        self.btn_brown.setPalette(QtGui.QPalette(colors[self.btn_brown.text()]))
+        self.btn_black.setText(_translate("MainWindow", "Черный"))
+        self.btn_black.setPalette(QtGui.QPalette(colors[self.btn_black.text()]))
+        self.btn_grey.setText(_translate("MainWindow", "Серый"))
+        self.btn_grey.setPalette(QtGui.QPalette(colors[self.btn_grey.text()]))
+    
     def setupTestColorEtkindKids(self) -> None:
-        self.setupTestClose()
         self.garbage = []
-        self.setupTestShow()
 
     def retranslateUiColorEtkindKids(self, MainWindow, _translate) -> None:
         pass
 
     def setupTestCattell(self) -> None:
-        self.setupTestClose()
         self.garbage = []
-        self.setupTestShow()
 
     def retranslateUiCattell(self, MainWindow, _translate) -> None:
         pass
 
     def setupTestSocialSupportScale(self) -> None:
-        self.setupTestClose()
         self.garbage = []
-        self.setupTestShow()
 
     def retranslateUiTestSocialSupportScale(self, MainWindow, _translate) -> None:
         pass
