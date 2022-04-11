@@ -18,7 +18,6 @@ class Leonhard_Schmishek:
         exaltation Экзальтированность
         """
         self.data = self.__create_data("Леонгарда-Шмишека")
-        self._instruction = self.data['instruction']
         self.rating = self.data['rating']
         self.hyperthymia = self.lateness = 0
         self.emotivity = self.pedantry = 0
@@ -26,10 +25,6 @@ class Leonhard_Schmishek:
         self.demonstrativeness = self.excitability = 0
         self.distimism = self.exaltation = 0
         self.choice_variants = []
-
-    @property
-    def instruction(self) -> str:
-        return self._instruction
 
     def __create_data(self, name_test,) -> dict:
         with open("tests/tests_data.json", 'r', encoding="utf-8") as f:
@@ -77,7 +72,6 @@ class Leonhard_Schmishek:
 
 def main():
     d = Leonhard_Schmishek()
-    print(d.instruction)
     print(d.get_result())
 
 

@@ -99,6 +99,20 @@ class Ui_MainWindow(object):
         for edit in edits:
             edit.setEnabled(params)
 
+    def setupProgressBar(self, max_len: int) -> None:
+        """Создание объекта прогресс бара, для отслеживания выполнения 
+        """
+        # print(max_len)
+        self.progressBar = QtWidgets.QProgressBar(
+            self.widget, minimum=0, maximum=max_len, objectName="progressBar")
+        self.progressBar.setGeometry(QtCore.QRect(50, 320, 700, 20))
+        # self.progressBar.setProperty("value", 12)
+
+    def setupProgressBarChanged(self, num_quest: int) -> None:
+        """Изменение прогресса от номера вопроса 
+        """
+        self.progressBar.setProperty("value", num_quest)
+
     def setupTestLeonhardSchmishek(self) -> None:
         """Создание объектов взаимодействия для теста Leonhard Schmishek
         """
@@ -108,10 +122,7 @@ class Ui_MainWindow(object):
         self.btn_no = QtWidgets.QPushButton(self.widget)
         self.btn_no.setGeometry(QtCore.QRect(410, 280, 80, 25))
         self.btn_no.setObjectName("btn_no")
-        self.progressBar = QtWidgets.QProgressBar(self.widget)
-        self.progressBar.setGeometry(QtCore.QRect(60, 280, 118, 23))
-        self.progressBar.setProperty("value", 0)
-        self.progressBar.setObjectName("progressBar")
+        self.setupProgressBar(max_len=len(self.Test.get_questions(0)))
         self.lbl_question = QtWidgets.QLabel(self.widget)
         self.lbl_question.setGeometry(QtCore.QRect(10, 99, 771, 131))
         self.lbl_question.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -149,9 +160,10 @@ class Ui_MainWindow(object):
         self.btn_highly = QtWidgets.QPushButton(self.widget)
         self.btn_highly.setGeometry(QtCore.QRect(550, 280, 80, 25))
         self.btn_highly.setObjectName("btn_highly")
+        self.setupProgressBar(max_len=len(self.Test.get_questions(1)))
 
         self.garbage = [self.btn_no, self.btn_little, self.btn_enought,
-                        self.btn_much, self.btn_highly]
+                        self.btn_much, self.btn_highly, self.progressBar]
 
     def retranslateUiScalePersonalAnxiety(self, MainWindow, _translate) -> None:
         """Отрисовка интерфейся посвещенной тесту: 
@@ -189,10 +201,11 @@ class Ui_MainWindow(object):
         self.btn_grey = QtWidgets.QPushButton(self.widget)
         self.btn_grey.setGeometry(QtCore.QRect(650, 280, 80, 25))
         self.btn_grey.setObjectName("btn_grey")
+        self.setupProgressBar(max_len=len(self.Test.get_questions(2)))
 
         self.garbage = [self.btn_blue, self.btn_green, self.btn_red,
                         self.btn_yellow, self.btn_violete, self.btn_brown,
-                        self.btn_black, self.btn_grey]
+                        self.btn_black, self.btn_grey, self.progressBar]
 
     def retranslateUiColorEtkind(self, MainWindow, _translate) -> None:
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -210,21 +223,35 @@ class Ui_MainWindow(object):
         self.btn_red.setText(_translate("MainWindow", "Красный"))
         self.btn_red.setPalette(QtGui.QPalette(colors[self.btn_red.text()]))
         self.btn_yellow.setText(_translate("MainWindow", "Желтый"))
-        self.btn_yellow.setPalette(QtGui.QPalette(colors[self.btn_yellow.text()]))
+        self.btn_yellow.setPalette(
+            QtGui.QPalette(colors[self.btn_yellow.text()]))
         self.btn_violete.setText(_translate("MainWindow", "Фиолетовый"))
-        self.btn_violete.setPalette(QtGui.QPalette(colors[self.btn_violete.text()]))
+        self.btn_violete.setPalette(
+            QtGui.QPalette(colors[self.btn_violete.text()]))
         self.btn_brown.setText(_translate("MainWindow", "Коричневый"))
-        self.btn_brown.setPalette(QtGui.QPalette(colors[self.btn_brown.text()]))
+        self.btn_brown.setPalette(
+            QtGui.QPalette(colors[self.btn_brown.text()]))
         self.btn_black.setText(_translate("MainWindow", "Черный"))
-        self.btn_black.setPalette(QtGui.QPalette(colors[self.btn_black.text()]))
+        self.btn_black.setPalette(
+            QtGui.QPalette(colors[self.btn_black.text()]))
         self.btn_grey.setText(_translate("MainWindow", "Серый"))
         self.btn_grey.setPalette(QtGui.QPalette(colors[self.btn_grey.text()]))
-    
+
+        self.btn_blue.clicked.connect(lambda: self.control(self.btn_blue))
+        self.btn_green.clicked.connect(lambda: self.control(self.btn_green))
+        self.btn_red.clicked.connect(lambda: self.control(self.btn_red))
+        self.btn_violete.clicked.connect(
+            lambda: self.control(self.btn_violete))
+        self.btn_brown.clicked.connect(lambda: self.control(self.btn_brown))
+        self.btn_yellow.clicked.connect(lambda: self.control(self.btn_yellow))
+        self.btn_black.clicked.connect(lambda: self.control(self.btn_black))
+        self.btn_grey.clicked.connect(lambda: self.control(self.btn_grey))
+
     def setupTestColorEtkindKids(self) -> None:
-        self.garbage = []
+        self.setupTestColorEtkind()
 
     def retranslateUiColorEtkindKids(self, MainWindow, _translate) -> None:
-        pass
+        self.retranslateUiColorEtkind(MainWindow, _translate)
 
     def setupTestCattell(self) -> None:
         self.garbage = []
@@ -233,16 +260,30 @@ class Ui_MainWindow(object):
         pass
 
     def setupTestSocialSupportScale(self) -> None:
-        self.garbage = []
+        self.btn_yes = QtWidgets.QPushButton(self.widget)
+        self.btn_yes.setGeometry(QtCore.QRect(320, 280, 80, 25))
+        self.btn_yes.setObjectName("btn_yes")
+        self.btn_no = QtWidgets.QPushButton(self.widget)
+        self.btn_no.setGeometry(QtCore.QRect(410, 280, 80, 25))
+        self.btn_no.setObjectName("btn_no")
+        self.lbl_question = QtWidgets.QLabel(self.widget)
+        self.lbl_question.setGeometry(QtCore.QRect(10, 99, 771, 131))
+        self.lbl_question.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.lbl_question.setWordWrap(True)
+        self.lbl_question.setObjectName("lbl_question")
+        self.garbage = [self.btn_yes, self.btn_no, self.lbl_question]
 
     def retranslateUiTestSocialSupportScale(self, MainWindow, _translate) -> None:
-        pass
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.btn_no.setText(_translate("MainWindow", "Нет"))
+        self.btn_yes.setText(_translate("MainWindow", "Да"))
+        self.lbl_question.setText(_translate("MainWindow", "Вопрос"))
 
     def setupUiQuestion(self) -> None:
         """Инициализация основного виджета для тестов
         """
         self.widget = QtWidgets.QWidget(self.centralwidget)
-        self.widget.setGeometry(QtCore.QRect(10, 130, 791, 321))
+        self.widget.setGeometry(QtCore.QRect(10, 130, 800, 350))
         self.widget.setObjectName("widget")
         self.lbl_instruction = QtWidgets.QLabel(self.widget)
         self.lbl_instruction.setGeometry(QtCore.QRect(10, 10, 771, 81))
@@ -290,11 +331,25 @@ class Ui_MainWindow(object):
 
         if btn == self.btn_begin:
             if check_data():
-                print('letsgo')
+                self.Test.set_data(
+                    last_name=self.edt_last_name.text(),
+                    name=self.edt_name.text(),
+                    surname=self.edt_father_name.text(),
+                    gender=self.cbox_gender.itemText(
+                        self.cbox_gender.currentIndex()),
+                    age=int(self.edt_age.text())
+                )
                 self.change_edit_user_data(params=False)
+                self.Test.init_test(cur_test=self.cbox_tests.currentIndex())
             else:
                 print(self.cbox_tests.currentIndex())
                 self.showErrorOk("Не все данные введены !")
+
+        for btn_col in (self.btn_blue, self.btn_black, self.btn_yellow,
+                        self.btn_grey, self.btn_green, self.btn_brown,
+                        self.btn_red, self.btn_violete):
+            if btn is btn_col:
+                print(btn.text())
 
     def showErrorOk(self, text: str = "") -> None:
         """Простой вывод ошибок с кнопкой "Ok" 

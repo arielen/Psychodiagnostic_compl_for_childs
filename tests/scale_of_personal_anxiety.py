@@ -1,10 +1,10 @@
 import json
-from anxiety import data as anx_data
+# from anxiety import data as anx_data
 
 
 class ScaleOfPersonalAnxiety:
 
-    def __init__(self, age: int, gender: str = "Мужчина") -> None:
+    def __init__(self, gender: str = "Мужчина", age: int = 0) -> None:
         self.data = self.__create_data(
             "Шкала личностной тревожности для учащихся 10-16 лет")
         self.rating = self.data['rating']
