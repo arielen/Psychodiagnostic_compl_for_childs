@@ -21,15 +21,19 @@ class Test:
                 "object": ScaleOfPersonalAnxiety},
             2: {"name": "3. Цветовой тест отношений (ЦТО) А. М. Эткинда",
                 "instruction": self.data["Цветовой тест отношений Эткинда"]["instruction"],
-                "questions": self.data["Цветовой тест отношений Эткинда"]["questions"]},
-
+                "questions": self.data["Цветовой тест отношений Эткинда"]["questions"],
+                "object": 'pass'},
             3: {"name": "4. МЕТОДИКА «ЦВЕТОВОЙ ТЕСТ ОТНОШЕНИЙ» (ЦТО). ДЕТСКИЙ ВАРИАНТ ДИАГНОСТИКИ ОТНОШЕНИЯ К НРАВСТВЕННЫМ НОРМАМ",
-                "instruction": self.data["Цветовой тест отношений Эткинда детский вариант"]["instruction"]},
+                "instruction": self.data["Цветовой тест отношений Эткинда детский вариант"]["instruction"],
+                "object": "pass"},
             4: {"name": "5. ТЕСТ КЕТТЕЛЛА, ДЕТСКИЙ ВАРИАНТ. АДАПТИРОВАН Э. М. АЛЕКСАНДРОВСКОЙ. 12 ФЛО-120",
-                "instruction": self.data["Тест Кеттелла"]["instruction"]},
+                "instruction": self.data["Тест Кеттелла"]["instruction"],
+                "object": 'pass'},
             5: {"name": "6. ШКАЛА СОЦИАЛЬНОЙ ПОДДЕРЖКИ (МНОГОМЕРНАЯ ШКАЛА ВОСПРИЯТИЯ СОЦИАЛЬНОЙ ПОДДЕРЖКИ – MSPSS ; Д.ЗИМЕТ; АДАПТАЦИЯ В. М. ЯЛТОНСКИЙ, Н. А. СИРОТА)",
-                "instruction": self.data["Шкала социальной поддержки"]["instruction"]}
+                "instruction": self.data["Шкала социальной поддержки"]["instruction"],
+                "object": 'pass'},
         }
+        self.cur_test = None
 
     def parse_result(self) -> list:
         return
@@ -40,12 +44,12 @@ class Test:
         return f"{self.instruction} {self.tests[cur_test]['name']}\n{self.tests[cur_test]['instruction']}"
 
     def get_tests(self) -> tuple:
-        """Возвращает генератор всех тестов 
+        """Возвращает генератор с названиями всех тестов 
         """
         return (self.tests[test]["name"] for test in self.tests)
 
     def get_genders(self) -> tuple:
-        """Возвращает генератор всех полов
+        """Возвращает генератор с названиями всех полов
         """
         return self.genders
 
@@ -68,7 +72,6 @@ class Test:
 
     def init_test(self, cur_test: int) -> None:
         cur_test = self.tests[cur_test]['object']
-
         if cur_test is Leonhard_Schmishek:
             self.cur_test = Leonhard_Schmishek()
         elif cur_test is ScaleOfPersonalAnxiety:

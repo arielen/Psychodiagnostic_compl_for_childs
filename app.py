@@ -1,5 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-from tests.test import Test
+from tests.test import Test, Leonhard_Schmishek
+# from tests.test1 import *
 
 
 class Ui_MainWindow(object):
@@ -140,25 +141,27 @@ class Ui_MainWindow(object):
         self.btn_yes.setText(_translate("MainWindow", "Да"))
         self.btn_no.setText(_translate("MainWindow", "Нет"))
         self.lbl_question.setText(_translate("MainWindow", "Вопрос"))
+        self.btn_yes.clicked.connect(lambda: self.control(self.btn_yes))
+        self.btn_no.clicked.connect(lambda: self.control(self.btn_no))
 
     def setupTestScalePersonalAnxiety(self) -> None:
         """Создание объектов взаимодействия для теста
         2. Шкала личностной тревожности для учащихся 10-16 лет
         """
         self.btn_no = QtWidgets.QPushButton(self.widget)
-        self.btn_no.setGeometry(QtCore.QRect(150, 280, 80, 25))
+        self.btn_no.setGeometry(QtCore.QRect(150, 280, 100, 25))
         self.btn_no.setObjectName("btn_no")
         self.btn_little = QtWidgets.QPushButton(self.widget)
-        self.btn_little.setGeometry(QtCore.QRect(250, 280, 80, 25))
+        self.btn_little.setGeometry(QtCore.QRect(250, 280, 100, 25))
         self.btn_little.setObjectName("btn_little")
         self.btn_enought = QtWidgets.QPushButton(self.widget)
-        self.btn_enought.setGeometry(QtCore.QRect(350, 280, 80, 25))
+        self.btn_enought.setGeometry(QtCore.QRect(350, 280, 100, 25))
         self.btn_enought.setObjectName("btn_enought")
         self.btn_much = QtWidgets.QPushButton(self.widget)
-        self.btn_much.setGeometry(QtCore.QRect(450, 280, 80, 25))
+        self.btn_much.setGeometry(QtCore.QRect(450, 280, 100, 25))
         self.btn_much.setObjectName("btn_much")
         self.btn_highly = QtWidgets.QPushButton(self.widget)
-        self.btn_highly.setGeometry(QtCore.QRect(550, 280, 80, 25))
+        self.btn_highly.setGeometry(QtCore.QRect(550, 280, 100, 25))
         self.btn_highly.setObjectName("btn_highly")
         self.setupProgressBar(max_len=len(self.Test.get_questions(1)))
 
@@ -178,28 +181,28 @@ class Ui_MainWindow(object):
 
     def setupTestColorEtkind(self) -> None:
         self.btn_blue = QtWidgets.QPushButton(self.widget)
-        self.btn_blue.setGeometry(QtCore.QRect(20, 280, 80, 25))
+        self.btn_blue.setGeometry(QtCore.QRect(50, 210, 175, 50))
         self.btn_blue.setObjectName("btn_blue")
         self.btn_green = QtWidgets.QPushButton(self.widget)
-        self.btn_green.setGeometry(QtCore.QRect(110, 280, 80, 25))
+        self.btn_green.setGeometry(QtCore.QRect(225, 210, 175, 50))
         self.btn_green.setObjectName("btn_green")
         self.btn_red = QtWidgets.QPushButton(self.widget)
-        self.btn_red.setGeometry(QtCore.QRect(200, 280, 80, 25))
+        self.btn_red.setGeometry(QtCore.QRect(400, 210, 175, 50))
         self.btn_red.setObjectName("btn_red")
         self.btn_yellow = QtWidgets.QPushButton(self.widget)
-        self.btn_yellow.setGeometry(QtCore.QRect(290, 280, 80, 25))
+        self.btn_yellow.setGeometry(QtCore.QRect(575, 210, 175, 50))
         self.btn_yellow.setObjectName("btn_yellow")
         self.btn_violete = QtWidgets.QPushButton(self.widget)
-        self.btn_violete.setGeometry(QtCore.QRect(380, 280, 80, 25))
+        self.btn_violete.setGeometry(QtCore.QRect(50, 260, 175, 50))
         self.btn_violete.setObjectName("btn_violete")
         self.btn_brown = QtWidgets.QPushButton(self.widget)
-        self.btn_brown.setGeometry(QtCore.QRect(470, 280, 80, 25))
+        self.btn_brown.setGeometry(QtCore.QRect(225, 260, 175, 50))
         self.btn_brown.setObjectName("btn_brown")
         self.btn_black = QtWidgets.QPushButton(self.widget)
-        self.btn_black.setGeometry(QtCore.QRect(560, 280, 80, 25))
+        self.btn_black.setGeometry(QtCore.QRect(400, 260, 175, 50))
         self.btn_black.setObjectName("btn_black")
         self.btn_grey = QtWidgets.QPushButton(self.widget)
-        self.btn_grey.setGeometry(QtCore.QRect(650, 280, 80, 25))
+        self.btn_grey.setGeometry(QtCore.QRect(575, 260, 175, 50))
         self.btn_grey.setObjectName("btn_grey")
         self.setupProgressBar(max_len=len(self.Test.get_questions(2)))
 
@@ -343,13 +346,18 @@ class Ui_MainWindow(object):
                 self.Test.init_test(cur_test=self.cbox_tests.currentIndex())
             else:
                 print(self.cbox_tests.currentIndex())
-                self.showErrorOk("Не все данные введены !")
-
-        for btn_col in (self.btn_blue, self.btn_black, self.btn_yellow,
-                        self.btn_grey, self.btn_green, self.btn_brown,
-                        self.btn_red, self.btn_violete):
-            if btn is btn_col:
-                print(btn.text())
+                return self.showErrorOk("Не все данные введены !")
+        try:
+            for btn_col in (self.btn_blue, self.btn_black, self.btn_yellow,
+                            self.btn_grey, self.btn_green, self.btn_brown,
+                            self.btn_red, self.btn_violete):
+                if btn is btn_col:
+                    print(btn.text())
+        except:
+            pass
+        for btn_bool in (self.btn_yes, self.btn_no):
+            if btn is btn_bool:
+                print(self.Test.cur_test)
 
     def showErrorOk(self, text: str = "") -> None:
         """Простой вывод ошибок с кнопкой "Ok" 

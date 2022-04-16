@@ -24,11 +24,17 @@ class Leonhard_Schmishek:
         self.anxiety = self.cyclothymicity = 0
         self.demonstrativeness = self.excitability = 0
         self.distimism = self.exaltation = 0
+        self.cur_quest = 0
         self.choice_variants = []
 
     def __create_data(self, name_test,) -> dict:
         with open("tests/tests_data.json", 'r', encoding="utf-8") as f:
             return json.load(f)[name_test]
+
+    def get_questions(self) -> str:
+        """ Возвращает текущий вопрос 
+        """
+        return self.data["questions"][self.cur_quest]
 
     def added_choice(self, question: str) -> None:
         """Принимает номер вопроса и добавляет его в self.choice_variants
@@ -65,9 +71,6 @@ class Leonhard_Schmishek:
             else:
                 res.update({feature: "В пределах нормы"})
         return res
-
-    def __str__(self) -> str:
-        return str(pprint.pformat(self.rating))
 
 
 def main():
