@@ -1,6 +1,5 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-from tests.test import Test, Leonhard_Schmishek
-# from tests.test1 import *
+from src.tests import *
 
 
 class Ui_MainWindow(object):
@@ -84,11 +83,11 @@ class Ui_MainWindow(object):
                     "retranslate": self.retranslateUiCattell},
                 5: {"setup": self.setupTestSocialSupportScale,
                     "retranslate": self.retranslateUiTestSocialSupportScale}}
-        self.lbl_instruction.setText(self.Test.get_instruction(index))
         [obj.close() for obj in self.garbage]
         if index in data:
             data[index]["setup"]()
             data[index]["retranslate"](self.MainWindow, _translate)
+        self.lbl_instruction.setText(self.Test.get_instruction())
         [obj.show() for obj in self.garbage]
 
     def change_edit_user_data(self, params: bool) -> None:
@@ -117,13 +116,14 @@ class Ui_MainWindow(object):
     def setupTestLeonhardSchmishek(self) -> None:
         """Создание объектов взаимодействия для теста Leonhard Schmishek
         """
+        self.Test = Leonhard()
         self.btn_yes = QtWidgets.QPushButton(self.widget)
         self.btn_yes.setGeometry(QtCore.QRect(320, 280, 80, 25))
         self.btn_yes.setObjectName("btn_yes")
         self.btn_no = QtWidgets.QPushButton(self.widget)
         self.btn_no.setGeometry(QtCore.QRect(410, 280, 80, 25))
         self.btn_no.setObjectName("btn_no")
-        self.setupProgressBar(max_len=len(self.Test.get_questions(0)))
+        self.setupProgressBar(max_len=self.Test.get_questions_len())
         self.lbl_question = QtWidgets.QLabel(self.widget)
         self.lbl_question.setGeometry(QtCore.QRect(10, 99, 771, 131))
         self.lbl_question.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -140,7 +140,8 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.btn_yes.setText(_translate("MainWindow", "Да"))
         self.btn_no.setText(_translate("MainWindow", "Нет"))
-        self.lbl_question.setText(_translate("MainWindow", "Вопрос"))
+        self.lbl_question.setText(_translate(
+            "MainWindow", self.Test.get_question()))
         self.btn_yes.clicked.connect(lambda: self.control(self.btn_yes))
         self.btn_no.clicked.connect(lambda: self.control(self.btn_no))
 
@@ -148,6 +149,7 @@ class Ui_MainWindow(object):
         """Создание объектов взаимодействия для теста
         2. Шкала личностной тревожности для учащихся 10-16 лет
         """
+        self.Test = ScaleOfPersonalAnxiety()
         self.btn_no = QtWidgets.QPushButton(self.widget)
         self.btn_no.setGeometry(QtCore.QRect(150, 280, 100, 25))
         self.btn_no.setObjectName("btn_no")
@@ -163,10 +165,16 @@ class Ui_MainWindow(object):
         self.btn_highly = QtWidgets.QPushButton(self.widget)
         self.btn_highly.setGeometry(QtCore.QRect(550, 280, 100, 25))
         self.btn_highly.setObjectName("btn_highly")
-        self.setupProgressBar(max_len=len(self.Test.get_questions(1)))
+        self.setupProgressBar(max_len=self.Test.get_questions_len())
+        self.lbl_question = QtWidgets.QLabel(self.widget)
+        self.lbl_question.setGeometry(QtCore.QRect(10, 99, 771, 131))
+        self.lbl_question.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.lbl_question.setWordWrap(True)
+        self.lbl_question.setObjectName("lbl_question")
 
         self.garbage = [self.btn_no, self.btn_little, self.btn_enought,
-                        self.btn_much, self.btn_highly, self.progressBar]
+                        self.btn_much, self.btn_highly, self.progressBar,
+                        self.lbl_question]
 
     def retranslateUiScalePersonalAnxiety(self, MainWindow, _translate) -> None:
         """Отрисовка интерфейся посвещенной тесту: 
@@ -178,8 +186,11 @@ class Ui_MainWindow(object):
         self.btn_enought.setText(_translate("MainWindow", "Достаточно"))
         self.btn_much.setText(_translate("MainWindow", "Значительно"))
         self.btn_highly.setText(_translate("MainWindow", "Очень"))
+        self.lbl_question.setText(_translate(
+            "MainWindow", self.Test.get_question()))
 
     def setupTestColorEtkind(self) -> None:
+        self.Test = ColorRelationship()
         self.btn_blue = QtWidgets.QPushButton(self.widget)
         self.btn_blue.setGeometry(QtCore.QRect(50, 210, 175, 50))
         self.btn_blue.setObjectName("btn_blue")
@@ -204,11 +215,17 @@ class Ui_MainWindow(object):
         self.btn_grey = QtWidgets.QPushButton(self.widget)
         self.btn_grey.setGeometry(QtCore.QRect(575, 260, 175, 50))
         self.btn_grey.setObjectName("btn_grey")
-        self.setupProgressBar(max_len=len(self.Test.get_questions(2)))
+        self.setupProgressBar(max_len=self.Test.get_questions_len())
+        self.lbl_question = QtWidgets.QLabel(self.widget)
+        self.lbl_question.setGeometry(QtCore.QRect(10, 99, 771, 131))
+        self.lbl_question.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.lbl_question.setWordWrap(True)
+        self.lbl_question.setObjectName("lbl_question")
 
         self.garbage = [self.btn_blue, self.btn_green, self.btn_red,
                         self.btn_yellow, self.btn_violete, self.btn_brown,
-                        self.btn_black, self.btn_grey, self.progressBar]
+                        self.btn_black, self.btn_grey, self.progressBar,
+                        self.lbl_question]
 
     def retranslateUiColorEtkind(self, MainWindow, _translate) -> None:
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -240,6 +257,8 @@ class Ui_MainWindow(object):
         self.btn_grey.setText(_translate("MainWindow", "Серый"))
         self.btn_grey.setPalette(QtGui.QPalette(colors[self.btn_grey.text()]))
 
+        self.lbl_question.setText(self.Test.get_question())
+
         self.btn_blue.clicked.connect(lambda: self.control(self.btn_blue))
         self.btn_green.clicked.connect(lambda: self.control(self.btn_green))
         self.btn_red.clicked.connect(lambda: self.control(self.btn_red))
@@ -257,12 +276,23 @@ class Ui_MainWindow(object):
         self.retranslateUiColorEtkind(MainWindow, _translate)
 
     def setupTestCattell(self) -> None:
-        self.garbage = []
+        self.Test = Cattell()
+        self.lbl_question = QtWidgets.QLabel(self.widget)
+        self.lbl_question.setGeometry(QtCore.QRect(10, 99, 771, 131))
+        self.lbl_question.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.lbl_question.setWordWrap(True)
+        self.lbl_question.setObjectName("lbl_question")
+        self.setupProgressBar(max_len=self.Test.get_questions_len())
+
+        self.garbage = [self.progressBar, self.lbl_question]
 
     def retranslateUiCattell(self, MainWindow, _translate) -> None:
-        pass
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.lbl_question.setText(_translate(
+            "MainWindow", self.Test.get_question()))
 
     def setupTestSocialSupportScale(self) -> None:
+        self.Test = SocialSupportScale()
         self.btn_yes = QtWidgets.QPushButton(self.widget)
         self.btn_yes.setGeometry(QtCore.QRect(320, 280, 80, 25))
         self.btn_yes.setObjectName("btn_yes")
@@ -274,13 +304,17 @@ class Ui_MainWindow(object):
         self.lbl_question.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.lbl_question.setWordWrap(True)
         self.lbl_question.setObjectName("lbl_question")
-        self.garbage = [self.btn_yes, self.btn_no, self.lbl_question]
+        self.setupProgressBar(max_len=self.Test.get_questions_len())
+
+        self.garbage = [self.btn_yes, self.btn_no, self.lbl_question,
+                        self.progressBar]
 
     def retranslateUiTestSocialSupportScale(self, MainWindow, _translate) -> None:
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.btn_no.setText(_translate("MainWindow", "Нет"))
         self.btn_yes.setText(_translate("MainWindow", "Да"))
-        self.lbl_question.setText(_translate("MainWindow", "Вопрос"))
+        self.lbl_question.setText(_translate(
+            "MainWindow", self.Test.get_question()))
 
     def setupUiQuestion(self) -> None:
         """Инициализация основного виджета для тестов
@@ -332,32 +366,32 @@ class Ui_MainWindow(object):
         def check_data():
             return "" not in (val.text() for val in (self.edt_age, self.edt_father_name, self.edt_last_name, self.edt_name))
 
-        if btn == self.btn_begin:
-            if check_data():
-                self.Test.set_data(
-                    last_name=self.edt_last_name.text(),
-                    name=self.edt_name.text(),
-                    surname=self.edt_father_name.text(),
-                    gender=self.cbox_gender.itemText(
-                        self.cbox_gender.currentIndex()),
-                    age=int(self.edt_age.text())
-                )
-                self.change_edit_user_data(params=False)
-                self.Test.init_test(cur_test=self.cbox_tests.currentIndex())
-            else:
-                print(self.cbox_tests.currentIndex())
-                return self.showErrorOk("Не все данные введены !")
-        try:
-            for btn_col in (self.btn_blue, self.btn_black, self.btn_yellow,
-                            self.btn_grey, self.btn_green, self.btn_brown,
-                            self.btn_red, self.btn_violete):
-                if btn is btn_col:
-                    print(btn.text())
-        except:
-            pass
-        for btn_bool in (self.btn_yes, self.btn_no):
-            if btn is btn_bool:
-                print(self.Test.cur_test)
+        # if btn == self.btn_begin:
+        #     if check_data():
+        #         self.Test.set_data(
+        #             last_name=self.edt_last_name.text(),
+        #             name=self.edt_name.text(),
+        #             surname=self.edt_father_name.text(),
+        #             gender=self.cbox_gender.itemText(
+        #                 self.cbox_gender.currentIndex()),
+        #             age=int(self.edt_age.text())
+        #         )
+        #         self.change_edit_user_data(params=False)
+        #         self.Test.init_test(cur_test=self.cbox_tests.currentIndex())
+        #     else:
+        #         print(self.cbox_tests.currentIndex())
+        #         return self.showErrorOk("Не все данные введены !")
+        # try:
+        #     for btn_col in (self.btn_blue, self.btn_black, self.btn_yellow,
+        #                     self.btn_grey, self.btn_green, self.btn_brown,
+        #                     self.btn_red, self.btn_violete):
+        #         if btn is btn_col:
+        #             print(btn.text())
+        # except:
+        #     pass
+        # for btn_bool in (self.btn_yes, self.btn_no):
+        #     if btn is btn_bool:
+        #         print(self.Test.cur_test)
 
     def showErrorOk(self, text: str = "") -> None:
         """Простой вывод ошибок с кнопкой "Ok" 
