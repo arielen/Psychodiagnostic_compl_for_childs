@@ -67,31 +67,50 @@ class Ui_MainWindow(object):
         self.updateTestCombo(self.cbox_tests.currentIndex())
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def updateTestCombo(self, index) -> None:
-        """Обновление интерфейса в зависимости от выбранного теста
+    def updateTestCombo(self, index, start: bool = False) -> None:
+        """ Обновление интерфейса в зависимости от выбранного теста
         """
         _translate = QtCore.QCoreApplication.translate
         data = {0: {"setup": self.setupTestLeonhardSchmishek,
-                    "retranslate": self.retranslateUiLeonhardSchmishek},
+                    "retranslate": self.retranslateUiLeonhardSchmishek,
+                    "object": Leonhard},
                 1: {"setup": self.setupTestScalePersonalAnxiety,
-                    "retranslate": self.retranslateUiScalePersonalAnxiety},
+                    "retranslate": self.retranslateUiScalePersonalAnxiety,
+                    "object": ScaleOfPersonalAnxiety},
                 2: {"setup": self.setupTestColorEtkind,
-                    "retranslate": self.retranslateUiColorEtkind},
+                    "retranslate": self.retranslateUiColorEtkind,
+                    "object": ColorRelationship},
                 3: {"setup": self.setupTestColorEtkindKids,
-                    "retranslate": self.retranslateUiColorEtkindKids},
+                    "retranslate": self.retranslateUiColorEtkindKids,
+                    "object": ColorRelationshipKid},
                 4: {"setup": self.setupTestCattell,
-                    "retranslate": self.retranslateUiCattell},
+                    "retranslate": self.retranslateUiCattell,
+                    "object": Cattell},
                 5: {"setup": self.setupTestSocialSupportScale,
-                    "retranslate": self.retranslateUiTestSocialSupportScale}}
+                    "retranslate": self.retranslateUiTestSocialSupportScale,
+                    "object": SocialSupportScale}}
         [obj.close() for obj in self.garbage]
         if index in data:
+            if start:
+                self.Test = data[index]["object"](
+                    lastname=self.edt_last_name.text().strip(),
+                    name=self.edt_name.text().strip(),
+                    surname=self.edt_father_name.text().strip(),
+                    gender=self.cbox_gender.itemText(
+                        self.cbox_gender.currentIndex()).strip(),
+                    age=int(self.edt_age.text()))
+            else:
+                self.Test = data[index]["object"]()
             data[index]["setup"]()
             data[index]["retranslate"](self.MainWindow, _translate)
         self.lbl_instruction.setText(self.Test.get_instruction())
+        if not start:
+            [btn.disconnect()
+             for btn in self.garbage if type(btn) is QtWidgets.QPushButton]
         [obj.show() for obj in self.garbage]
 
     def change_edit_user_data(self, params: bool) -> None:
-        """Изменение активности пользовательских данных
+        """ Изменение активности пользовательских данных
         :params: принимает bool True для разблокировки, False для блокировки 
         """
         edits = (self.edt_age, self.edt_father_name, self.edt_last_name,
@@ -100,7 +119,7 @@ class Ui_MainWindow(object):
             edit.setEnabled(params)
 
     def setupProgressBar(self, max_len: int) -> None:
-        """Создание объекта прогресс бара, для отслеживания выполнения 
+        """ Создание объекта прогресс бара, для отслеживания выполнения 
         """
         # print(max_len)
         self.progressBar = QtWidgets.QProgressBar(
@@ -109,14 +128,13 @@ class Ui_MainWindow(object):
         # self.progressBar.setProperty("value", 12)
 
     def setupProgressBarChanged(self, num_quest: int) -> None:
-        """Изменение прогресса от номера вопроса 
+        """ Изменение прогресса от номера вопроса 
         """
         self.progressBar.setProperty("value", num_quest)
 
     def setupTestLeonhardSchmishek(self) -> None:
-        """Создание объектов взаимодействия для теста Leonhard Schmishek
+        """ Создание объектов взаимодействия для теста Leonhard Schmishek
         """
-        self.Test = Leonhard()
         self.btn_yes = QtWidgets.QPushButton(self.widget)
         self.btn_yes.setGeometry(QtCore.QRect(320, 280, 80, 25))
         self.btn_yes.setObjectName("btn_yes")
@@ -134,22 +152,38 @@ class Ui_MainWindow(object):
                         self.progressBar, self.lbl_question]
 
     def retranslateUiLeonhardSchmishek(self, MainWindow, _translate) -> None:
-        """Отрисовка интерфейся посвещенной тесту: 
+        """ Отрисовка интерфейся посвещенной тесту: 
         Опросник К.Леонгарда – Г. Шмишека для исследования акцентуированных свойств личности
         """
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.btn_yes.setText(_translate("MainWindow", "Да"))
         self.btn_no.setText(_translate("MainWindow", "Нет"))
+        self.lbl_question.setText(
+            f"<font size=12><b>{self.Test.get_question()}</b></font>")
+        self.btn_yes.clicked.connect(
+            lambda: self.controlLeonhard(self.btn_yes))
+        self.btn_no.clicked.connect(lambda: self.controlLeonhard(self.btn_no))
+
+    def controlLeonhard(self, btn: QtWidgets.QPushButton) -> None:
+        _translate = QtCore.QCoreApplication.translate
+        if self.Test.get_quest_ind() == self.Test.get_questions_len()-1:
+            [btn.close() for btn in (self.btn_yes, self.btn_no, self.lbl_question)]
+            return print(self.Test.get_result())
+        if btn == self.btn_yes:
+            self.Test.added_choice(self.Test.get_quest_ind())
+            self.Test.next_quest()
+        elif btn == self.btn_no:
+            self.Test.next_quest()
+        self.setupProgressBarChanged(self.Test.get_quest_ind() + 1)
         self.lbl_question.setText(_translate(
             "MainWindow", self.Test.get_question()))
-        self.btn_yes.clicked.connect(lambda: self.control(self.btn_yes))
-        self.btn_no.clicked.connect(lambda: self.control(self.btn_no))
+        self.lbl_question.setText(
+            f"<font size=12><b>{self.Test.get_question()}</b></font>")
 
     def setupTestScalePersonalAnxiety(self) -> None:
         """Создание объектов взаимодействия для теста
         2. Шкала личностной тревожности для учащихся 10-16 лет
         """
-        self.Test = ScaleOfPersonalAnxiety()
         self.btn_no = QtWidgets.QPushButton(self.widget)
         self.btn_no.setGeometry(QtCore.QRect(150, 280, 100, 25))
         self.btn_no.setObjectName("btn_no")
@@ -190,7 +224,6 @@ class Ui_MainWindow(object):
             "MainWindow", self.Test.get_question()))
 
     def setupTestColorEtkind(self) -> None:
-        self.Test = ColorRelationship()
         self.btn_blue = QtWidgets.QPushButton(self.widget)
         self.btn_blue.setGeometry(QtCore.QRect(50, 210, 175, 50))
         self.btn_blue.setObjectName("btn_blue")
@@ -276,7 +309,6 @@ class Ui_MainWindow(object):
         self.retranslateUiColorEtkind(MainWindow, _translate)
 
     def setupTestCattell(self) -> None:
-        self.Test = Cattell()
         self.lbl_question = QtWidgets.QLabel(self.widget)
         self.lbl_question.setGeometry(QtCore.QRect(10, 99, 771, 131))
         self.lbl_question.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -292,7 +324,6 @@ class Ui_MainWindow(object):
             "MainWindow", self.Test.get_question()))
 
     def setupTestSocialSupportScale(self) -> None:
-        self.Test = SocialSupportScale()
         self.btn_yes = QtWidgets.QPushButton(self.widget)
         self.btn_yes.setGeometry(QtCore.QRect(320, 280, 80, 25))
         self.btn_yes.setObjectName("btn_yes")
@@ -360,38 +391,20 @@ class Ui_MainWindow(object):
             lambda: self.control(self.btn_begin)
         )
 
-    def control(self, btn: QtWidgets.QPushButton) -> None:
-        """Основная функция контроля приложения
-        """
-        def check_data():
-            return "" not in (val.text() for val in (self.edt_age, self.edt_father_name, self.edt_last_name, self.edt_name))
+    def check_data(self) -> bool:
+        return "" not in (val.text() for val in (self.edt_age, self.edt_father_name, self.edt_last_name, self.edt_name))
 
-        # if btn == self.btn_begin:
-        #     if check_data():
-        #         self.Test.set_data(
-        #             last_name=self.edt_last_name.text(),
-        #             name=self.edt_name.text(),
-        #             surname=self.edt_father_name.text(),
-        #             gender=self.cbox_gender.itemText(
-        #                 self.cbox_gender.currentIndex()),
-        #             age=int(self.edt_age.text())
-        #         )
-        #         self.change_edit_user_data(params=False)
-        #         self.Test.init_test(cur_test=self.cbox_tests.currentIndex())
-        #     else:
-        #         print(self.cbox_tests.currentIndex())
-        #         return self.showErrorOk("Не все данные введены !")
-        # try:
-        #     for btn_col in (self.btn_blue, self.btn_black, self.btn_yellow,
-        #                     self.btn_grey, self.btn_green, self.btn_brown,
-        #                     self.btn_red, self.btn_violete):
-        #         if btn is btn_col:
-        #             print(btn.text())
-        # except:
-        #     pass
-        # for btn_bool in (self.btn_yes, self.btn_no):
-        #     if btn is btn_bool:
-        #         print(self.Test.cur_test)
+    def control(self, btn: QtWidgets.QPushButton) -> None:
+        """ Начало тестирования
+        Тут осуществляется проверка введенных данных, а также 
+        разблокируются кнопки для тестов  
+        """
+        if btn == self.btn_begin:
+            if self.check_data():
+                self.change_edit_user_data(params=False)
+                self.updateTestCombo(self.cbox_tests.currentIndex(), True)
+            else:
+                return self.showErrorOk("Не все данные введены !")
 
     def showErrorOk(self, text: str = "") -> None:
         """Простой вывод ошибок с кнопкой "Ok" 

@@ -46,10 +46,17 @@ class Test:
         """
         return {"lastname": self.lastname, "name": self.name, "surname": self.surname, "age": self.age, "gender": self.gender}
 
+    def get_info_user(self) -> dict:
+        return {"lastname": self.lastname, "name": self.name, "surname": self.surname, "age": self.age, "gender": self.gender}
+
     def get_questions_len(self) -> int:
         """ Возвращает количество всех тестов
         """
         return len(self.data["questions"])
+
+    def set_data(self, lastname: str, name: str, surname: str, gender: str, age: int) -> None:
+        self.lastname, self.name, self.surname = lastname, name, surname
+        self.gender, self.age = gender, age
 
     def added_choice(self, question: int) -> None:
         """ Принимает номер вопроса и добавляет его в список ответов
